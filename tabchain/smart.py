@@ -7,7 +7,22 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-def question_answering(question, temperature=0.0):
+def question_answering(question):
+    """
+    Answer a question based on a given context. Uses the 'Let's work this out in a step by step way to make sure that
+    we have the right answer.' prompt for chain of thought reasoning - https://arxiv.org/pdf/2211.01910.pdf
+
+    Parameters
+    ----------
+    question : str
+        The question to answer.
+
+    Returns
+    -------
+    str
+        The answer to the question.
+    """
+
     user_message = f"""Let's work this out in a step by step way to make sure that
           we have the right answer. --- {question}"""
 
@@ -26,7 +41,8 @@ def smart_gpt(question):
     """
     Based on - https://www.youtube.com/watch?v=wVzuvf9D9BU
 
-    The goal is to improve performance on question answering and reasoning tasks.
+    The goal is to use a chain of questions and answers to improve performance
+    on question answering and reasoning tasks.
 
     1. Generate 3 candidate answers to the question
     2. Allow the model to reflect on the candidate answers and identify flaws

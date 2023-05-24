@@ -10,6 +10,27 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def sentiment_analysis(text: str | list[str] | dict[str, str], mode: Literal["discrete", "continuous"]):
+    """
+    Assign sentiment to one or more pieces of text. Discrete mode returns a single word out of "positive", "negative",
+    or "neutral". Continuous mode returns a number between -1 and 1, where -1 is the most negative, 0 is neutral, and
+    1 is the most positive.
+
+    Parameters
+    ----------
+    text : str | list[str] | dict[str, str]
+        The text to assign sentiment to.
+    mode : Literal["discrete", "continuous"]
+        The mode to use for sentiment analysis. Discrete mode returns a single word out of "positive", "negative",
+        or "neutral". Continuous mode returns a number between -1 and 1, where -1 is the most negative, 0 is neutral,
+        and 1 is the most positive.
+
+    Returns
+    -------
+    str | list[str]
+        The sentiment of the text.
+
+    """
+
     if isinstance(text, str):
         text = [text]
 
@@ -42,6 +63,24 @@ def sentiment_analysis(text: str | list[str] | dict[str, str], mode: Literal["di
 
 
 def summarisation(text, n_sentences=None, percentage=None):
+    """
+    Summarize a piece of text into a specified number of sentences or a specified percentage of the original text.
+
+    Parameters
+    ----------
+    text : str
+        The text to summarise.
+    n_sentences : int, optional
+        The number of sentences to summarise the text into.
+    percentage : int, optional
+        The percentage of the original text to summarise the text into.
+
+    Returns
+    -------
+    str
+        The summarised text.
+    """
+
     if n_sentences:
         user_message = f"Summarize the following text into {n_sentences} sentences: --- {text}"
     elif percentage:
@@ -56,6 +95,22 @@ def summarisation(text, n_sentences=None, percentage=None):
 
 
 def translation(text, target_language):
+    """
+    Translate a piece of text into a specified target language.
+
+    Parameters
+    ----------
+    text : str
+        The text to translate.
+    target_language : str
+        The target language to translate the text into.
+
+    Returns
+    -------
+    str
+        The translated text.
+    """
+
     user_message = f"Translate the following text into {target_language}: --- {text}"
 
     response = openai.ChatCompletion.create(
@@ -67,6 +122,24 @@ def translation(text, target_language):
 
 
 def classification(text: list[str], labels: list[str] = None, examples: dict[str, str] = None):
+    """
+    Text classification.
+
+    Parameters
+    ----------
+    text : list[str]
+        A list of strings to classify.
+    labels : list[str], optional
+        A list of labels to classify the text into. If not provided, the model will generate labels.
+    examples : dict[str, str], optional
+        A dictionary of correctly classified examples. The keys are the labels and the values are the examples.
+
+    Returns
+    -------
+    list[str]
+        A list of labels for each piece of text.
+    """
+
     label_addon, example_addon = "", ""
 
     if labels:
