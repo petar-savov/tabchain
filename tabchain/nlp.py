@@ -17,19 +17,16 @@ def sentiment_analysis(text: str | list[str] | dict[str, str], mode: Literal["di
     system_message = "You are a sentiment analyzer."
 
     if mode == "discrete":
-        user_message = (
-            f"For every sentence, tell me if it is positive, negative, or neutral. "
-            f"Remember, you can only use one word to describe the sentiment. For example, "
-            f"'good' is positive, 'bad' is negative, and 'okay' is neutral. Return the output "
-            f"as a list of strings, where each string is either 'positive', 'negative', or "
-            f"'neutral'. --- {joined}"
-        )
+        user_message = f"""For every sentence, tell me if it is positive, negative, or neutral.
+            Remember, you can only use one word to describe the sentiment. For example,
+            'good' is positive, 'bad' is negative, and 'okay' is neutral. Return the output
+            as a list of strings, where each string is either 'positive', 'negative', or
+            'neutral'. --- {joined}"""
     elif mode == "continuous":
-        user_message = (
-            f"For every sentence, tell me how positive or negative it is. Return the output "
-            f"as a list of numbers between -1 and 1, where -1 is the most negative, 0 is neutral, "
-            f"and 1 is the most positive. --- {joined}"
-        )
+        user_message = f"""For every sentence, tell me how positive or negative it is. Return the output
+            f"as a list of numbers between -1 and 1, where -1 is the most negative, 0 is neutral,
+            f"and 1 is the most positive. --- {joined}"""
+
     else:
         raise ValueError("mode must be 'discrete' or 'continuous'")
 
@@ -89,19 +86,3 @@ def classification(text: list[str], labels: list[str] = None, examples: dict[str
     )
 
     return ast.literal_eval(response["choices"][0]["message"]["content"])
-
-
-def question_answering(question, temperature=0.0):
-    user_message = f"Let's work this out in a step by step way to make sure that\
-          we have the right answer. --- {question}"
-
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are a question answering model."},
-            {"role": "user", "content": user_message},
-        ],
-        temperature=temperature,
-    )
-
-    return response["choices"][0]["message"]["content"]
